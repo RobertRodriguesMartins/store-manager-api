@@ -1,4 +1,5 @@
 const express = require('express');
+require('express-async-errors');
 const errorHandler = require('./middlewares/errorHandler');
 const productRouter = require('./router/product');
 
@@ -9,7 +10,6 @@ app.use(express.json());
 app.use(productRouter);
 
 app.use(errorHandler);
-
 // não remova esse endpoint, é para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.send();
