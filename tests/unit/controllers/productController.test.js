@@ -3,7 +3,6 @@ const chai = require('chai');
 const chaiPromise = require('chai-as-promised');
 const productController = require('../../../controllers/productController');
 const productService = require('../../../services/productService');
-const joi = require('joi');
 
 chai.use(chaiPromise);
 
