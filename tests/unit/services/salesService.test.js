@@ -38,4 +38,20 @@ describe.only('/services/salesService', () => {
         .to.eventually.be.deep.equals(true);
     });
   });
+  describe('createSale', () => {
+    it('should throw when salesModel rejects', () => {
+      sinon.stub(salesModel, 'create').rejects();
+      return chai.expect(salesService.createSale()).to.eventually.be.rejected;
+    });
+    it('should throw if response isn"t an interable', () => {
+      sinon.stub(salesModel, 'create').resolves(1);
+      return chai.expect(salesService.createSale()).to.eventually.be.rejected;
+    });
+    it('should return an id', () => {
+      sinon.stub(salesModel, 'create').resolves([{ insertId: 1 }]);
+      return chai
+        .expect(salesService.createSale())
+        .to.eventually.be.deep.equals(1);
+    });
+  });
 });
