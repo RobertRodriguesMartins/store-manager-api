@@ -7,7 +7,7 @@ const salesService = require('../../../services/salesService');
 
 chai.use(chaiPromise);
 
-describe.only('/services/salesService', () => {
+describe('/services/salesService', () => {
   beforeEach(sinon.restore);
   describe('mapProductId', () => {
     it('should throw when arg isn"t an array', () => {
@@ -52,6 +52,32 @@ describe.only('/services/salesService', () => {
       return chai
         .expect(salesService.createSale())
         .to.eventually.be.deep.equals(1);
+    });
+  });
+  describe('createUserSale', () => {
+    it('should reject if productSales arg isn"t an array', () => {
+      sinon.stub(salesModel, 'createUserSale').resolves();
+      return chai.expect(salesService.createUserSale(1, 1)).to.eventually.be
+        .rejected;
+    });
+    it('should throw if productSales arg is an array with undefined ', () => {
+      sinon.stub(salesModel, 'createUserSale').resolves([undefined]);
+      return chai.expect(salesService.createUserSale()).to.eventually.be
+        .rejected;
+    });
+    it('should reject if salesModel rejects', () => {
+      sinon.stub(salesModel, 'createUserSale').rejects();
+      return chai.expect(salesService.createUserSale()).to.eventually.be
+        .rejected;
+    });
+    it('should returns an specific object', () => {
+      sinon.stub(salesModel, 'createUserSale').resolves();
+      return chai
+        .expect(salesService.createUserSale(1, [{ productId: 1, quantity: 2 }]))
+        .to.eventually.be.deep.equals({
+          id: 1,
+          itemsSold: [{ productId: 1, quantity: 2 }],
+        });
     });
   });
 });
