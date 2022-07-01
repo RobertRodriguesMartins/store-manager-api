@@ -1,7 +1,7 @@
 const productModel = require('../models/productModel');
 
 const productService = {
-  emptyData: (data) => (data.length < 1),
+  emptyData: (data) => data.length < 1,
   all: async () => {
     const data = await productModel.all();
     if (productService.emptyData(data)) throw new Error('NotFoundError');
@@ -18,7 +18,11 @@ const productService = {
   create: async (product) => {
     const created = await productModel.create(product);
 
-    return created;
+    const [{ insertId }] = created;
+    return {
+      id: insertId,
+      name: product,
+    };
   },
 };
 
