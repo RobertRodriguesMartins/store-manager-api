@@ -28,4 +28,16 @@ describe('/models/productModel', () => {
       return chai.expect(productModel.byId()).to.eventually.be.deep.equal([]);
     });
   });
+  describe('create', () => {
+    it('should rejects when db rejects', () => {
+      sinon.stub(connection, 'query').rejects();
+      return chai.expect(productModel.create()).to.eventually.be.rejected;
+    });
+    it('should return an array with object with insertId key', () => {
+      sinon.stub(connection, 'query').resolves([{ insertId: 1 }]);
+      return chai
+        .expect(productModel.create(1))
+        .to.eventually.be.deep.equal([{ insertId: 1 }]);
+    });
+  });
 });

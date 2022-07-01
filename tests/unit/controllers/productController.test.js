@@ -16,6 +16,9 @@ describe('/controller/productController', () => {
     params: {
       id: 2,
     },
+    body: {
+      name: 'teste',
+    },
   };
   describe('all', () => {
     it('should rejects when service rejects', () => {
@@ -50,6 +53,29 @@ describe('/controller/productController', () => {
       await chai.expect(productController.byId({ params: {} })).to.be.rejected;
       return chai.expect(productController.byId({ params: { id: 'a' } })).to.be
         .rejected;
+    });
+  });
+  describe('create', () => {
+    it('should rejects when service rejects', async () => {
+      sinon.stub(productService, 'create').rejects();
+      await chai.expect(productController.create(request, response, '')).to
+        .eventually.be.rejected;
+    });
+    it('should respond with status 201 and json with data', async () => {
+      sinon.stub(productService, 'create').resolves({ name: 'test', id: 1 });
+      await productController.create(request, response, '');
+      chai.expect(response.status.calledWith(201)).to.be.equals(true);
+      chai
+        .expect(response.json.calledWith({ name: 'test', id: 1 }))
+        .to.be.equals(true);
+    });
+    it('should return an error when joi throws', async () => {
+      sinon.stub(productService, 'create').resolves({ id: 'test' });
+      await chai.expect(productController.create('', request, '')).to.be
+        .rejected;
+      await chai.expect(productController.create({ body: {} })).to.be.rejected;
+      return chai.expect(productController.create({ body: { name: 'a' } })).to
+        .be.rejected;
     });
   });
 });
