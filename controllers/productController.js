@@ -19,7 +19,10 @@ const productController = {
   },
   create: async (req, res, _next) => {
     const schema = Joi.object({
-      name: Joi.string().not('').required(),
+      name: Joi.string().min(5).required().messages({
+        'string.min': '"name" length must be at least 5 characters long',
+        'any.required': '"name" is required',
+      }),
     }).required();
     const { name: product } = await schema.validateAsync({ ...req.body });
     const created = await productService.create(product);
