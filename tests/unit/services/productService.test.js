@@ -77,4 +77,20 @@ describe('/services/productService', () => {
       return chai.expect(productService.emptyData([])).to.be.equals(true);
     });
   });
+  describe('create', () => {
+    it('should throw if data isn"t an array', async () => {
+      sinon.stub(productModel, 'create').resolves(1);
+      await chai.expect(productService.create()).to.be.rejected;
+    });
+    it('should return an object if theres insertId key', async () => {
+      sinon.stub(productModel, 'create').resolves([{ insertId: 1 }]);
+      await chai
+        .expect(productService.create('iphone'))
+        .to.eventually.be.deep.equals({ name: 'iphone', id: 1 });
+    });
+    it('should rejects if model rejects', async () => {
+      sinon.stub(productModel, 'create').rejects();
+      await chai.expect(productService.create()).to.be.rejected;
+    });
+  });
 });
