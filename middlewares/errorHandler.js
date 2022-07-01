@@ -1,13 +1,18 @@
 function errorHandler(err, _req, res, _next) {
   switch (err.message) {
-    case 'ValidationError':
-      res.status(400).json({
-        message: 'bad request',
-      });
-      return;
     case 'NotFoundError':
       res.status(404).json({
         message: 'Product not found',
+      });
+      return;
+    case '"name" is required':
+      res.status(400).json({
+        message: err.message,
+      });
+      return;
+    case '"name" length must be at least 5 characters long':
+      res.status(422).json({
+        message: err.message,
       });
       return;
     default:
