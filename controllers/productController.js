@@ -24,7 +24,7 @@ const productController = {
     const { name: product } = await schema.validateAsync({ ...req.body });
     const created = await productService.create(product);
 
-    res.status(200).json(created);
+    res.status(201).json(created);
   },
 };
 
