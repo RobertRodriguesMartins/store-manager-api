@@ -11,12 +11,6 @@
     "source.fixAll": true,
     "source.organizeImports": true
   },
-  // javascript
-  "javascript.suggestionActions.enabled": false,
-  // typescript
-  "typescript.suggestionActions.enabled": false,
-  // thunder-client
-  "thunder-client.saveToWorkspace": true,
   // files
   "files.eol": "\n",
   "files.exclude": {
@@ -30,7 +24,7 @@
     ".nyc_output": true,
     "thunder-tests": true,
     "**/.gitkeep": true,
-    ".npmrc":true
+    ".npmrc": true
   },
   // barrelr
   "barrelr.lineEnding": "LF"
