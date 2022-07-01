@@ -1,4 +1,5 @@
 const db = require('mysql2/promise');
+require('dotenv').config();
 
 db.config = {
   user: process.env.MYSQL_USER,
