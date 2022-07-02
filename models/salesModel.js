@@ -43,6 +43,12 @@ const salesModel = {
 
     return created;
   },
+  erase: async (sale) => {
+    const deleteUserSaleQuery = `DELETE FROM 
+    StoreManager.sales_products WHERE sale_id = ?`;
+
+    await connection.query(deleteUserSaleQuery, [sale]);
+  },
 };
 
 module.exports = salesModel;
