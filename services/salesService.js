@@ -42,6 +42,9 @@ const salesService = {
       itemsSold: productsSales,
     };
   },
+  erase: async (sale) => {
+    await salesModel.erase(sale);
+  },
   mapProductId: (productsSales) =>
     productsSales.map((data) => Number(data.productId)),
 };
