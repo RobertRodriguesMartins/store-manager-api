@@ -1,9 +1,16 @@
 const salesModel = require('../models/salesModel');
+const NotFoundError = require('../utils/customErrors');
 const productService = require('./productService');
 
 const salesService = {
   all: async () => {
     const data = await salesModel.all();
+
+    return data;
+  },
+  byId: async (id) => {
+    const data = await salesModel.byId(id);
+    if (data.length < 1) throw new NotFoundError('Sale not found');
 
     return data;
   },
