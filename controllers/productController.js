@@ -38,6 +38,17 @@ const productController = {
 
     res.status(204).end();
   },
+  search: async (req, res, _next) => {
+    const schema = Joi.object({
+      q: Joi.string().allow('').required(),
+    }).required();
+    const { q: productToBeSearch } = await schema.validateAsync({
+      ...req.query,
+    });
+    const product = await productService.search(productToBeSearch);
+
+    res.status(200).json(product);
+  },
   update: async (req, res, _next) => {
     const schemaBody = Joi.object({
       name: Joi.string().min(5).required().messages({
