@@ -19,16 +19,23 @@ const productModel = {
 
     return created;
   },
+  erase: async (product) => {
+    const deleteProductQuery = 'DELETE FROM StoreManager.products WHERE id = ?;';
+    await connection.query(deleteProductQuery, [product]);
+  },
+  search: async (product) => {
+    const searchProductQuery = `SELECT * FROM StoreManager.products
+    WHERE name LIKE CONCAT(?, '%');`;
+    const [data] = await connection.query(searchProductQuery, [product]);
+
+    return data;
+  },
   update: async (id, product) => {
     const updateProductQuery = `UPDATE StoreManager.products
     SET name = ? WHERE id = ?;`;
     const updated = await connection.query(updateProductQuery, [product, id]);
 
     return updated;
-  },
-  erase: async (product) => {
-    const deleteProductQuery = 'DELETE FROM StoreManager.products WHERE id = ?;';
-    await connection.query(deleteProductQuery, [product]);
   },
 };
 
