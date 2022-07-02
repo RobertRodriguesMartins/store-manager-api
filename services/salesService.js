@@ -2,8 +2,11 @@ const salesModel = require('../models/salesModel');
 const productService = require('./productService');
 
 const salesService = {
-  mapProductId: (productsSales) =>
-    productsSales.map((data) => Number(data.productId)),
+  all: async () => {
+    const data = await salesModel.all();
+
+    return data;
+  },
   checkProduct: async (productsSales) => {
     const products = salesService.mapProductId(productsSales);
     const checkProducts = [];
@@ -32,6 +35,8 @@ const salesService = {
       itemsSold: productsSales,
     };
   },
+  mapProductId: (productsSales) =>
+    productsSales.map((data) => Number(data.productId)),
 };
 
 module.exports = salesService;
