@@ -29,12 +29,12 @@ const productController = {
 
     res.status(201).json(created);
   },
-  delete: async (req, res, _next) => {
+  erase: async (req, res, _next) => {
     const schema = Joi.object({
       id: Joi.number().positive().integer().required(),
     }).required();
     const { id: product } = await schema.validateAsync({ ...req.params });
-    await productService.delete(product);
+    await productService.erase(product);
 
     res.status(204).end();
   },
