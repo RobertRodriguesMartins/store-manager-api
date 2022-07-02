@@ -13,6 +13,18 @@ const salesModel = {
 
     return data;
   },
+  byId: async (id) => {
+    const findByIdQuery = `SELECT s.date, sa.product_id as productId, 
+      sa.quantity as quantity
+      FROM StoreManager.sales as s
+      INNER JOIN StoreManager.sales_products AS sa
+      ON sa.sale_id = s.id
+      WHERE s.id = ?
+      ORDER BY s.id ASC, sa.product_id ASC;`;
+    const [data] = await connection.query(findByIdQuery, [id]);
+
+    return data;
+  },
   create: async () => {
     const createSaleQuery = 'INSERT INTO StoreManager.sales(`date`) values (now());';
     const created = await connection.query(createSaleQuery);
