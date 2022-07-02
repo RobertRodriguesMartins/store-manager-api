@@ -93,4 +93,73 @@ describe('/services/productService', () => {
       await chai.expect(productService.create()).to.be.rejected;
     });
   });
+  describe('erase', () => {
+    it('should reject if productService "byId" rejects', async () => {
+      sinon.stub(productService, 'byId').rejects();
+      sinon.stub(productModel, 'erase').resolves();
+      await chai.expect(productService.erase()).to.eventually.be.rejected;
+    });
+    it('should reject if productModel "erase" rejects', async () => {
+      sinon.stub(productService, 'byId').resolves();
+      sinon.stub(productModel, 'erase').rejects();
+      await chai.expect(productService.erase()).to.eventually.be.rejected;
+    });
+    it('should resolves without errors and void', async () => {
+      sinon.stub(productService, 'byId').resolves();
+      sinon.stub(productModel, 'erase').resolves();
+      await chai.expect(productService.erase()).to.eventually.not.be.rejected;
+    });
+  });
+  describe('search', () => {
+    it('should reject if productModel "search" rejects', async () => {
+      sinon.stub(productModel, 'search').rejects();
+      sinon.stub(productService, 'all').resolves();
+      sinon.stub(productService, 'emptyData').returns([1]);
+      await chai.expect(productService.search()).to.eventually.be.rejected;
+    });
+    it('should reject if productModel "search" resolves without an array', async () => {
+      sinon.stub(productModel, 'search').resolves(1);
+      sinon.stub(productService, 'all').resolves();
+      sinon.stub(productService, 'emptyData').throws();
+      await chai.expect(productService.search()).to.eventually.be.rejected;
+    });
+    it('should resolves with productService all value if productModel search return an empty array', async () => {
+      sinon.stub(productModel, 'search').resolves([]);
+      sinon.stub(productService, 'all').resolves(1);
+      sinon.stub(productService, 'emptyData').returns(true);
+      await chai
+        .expect(productService.search())
+        .to.eventually.be.deep.equals(1);
+    });
+    it('should resolves with productModel search return', async () => {
+      sinon.stub(productModel, 'search').resolves([2]);
+      sinon.stub(productService, 'all').resolves();
+      sinon.stub(productService, 'emptyData').returns(false);
+      await chai
+        .expect(productService.search())
+        .to.eventually.be.deep.equals([2]);
+    });
+  });
+  describe('update', () => {
+    it('should reject if productService "byId" rejects', async () => {
+      sinon.stub(productService, 'byId').rejects();
+      sinon.stub(productModel, 'update').resolves();
+      await chai.expect(productService.update()).to.eventually.be.rejected;
+    });
+    it('should reject if productModel "update" rejects', async () => {
+      sinon.stub(productService, 'byId').resolves();
+      sinon.stub(productModel, 'update').rejects();
+      await chai.expect(productService.update()).to.eventually.be.rejected;
+    });
+    it('should resolves with an object', async () => {
+      sinon.stub(productService, 'byId').resolves();
+      sinon.stub(productModel, 'update').resolves();
+      await chai
+        .expect(productService.update(1, 'teste'))
+        .to.eventually.be.deep.equals({
+          id: 1,
+          name: 'teste',
+        });
+    });
+  });
 });
