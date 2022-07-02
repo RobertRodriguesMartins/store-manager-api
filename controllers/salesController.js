@@ -53,6 +53,14 @@ const salesController = {
 
     res.status(204).end();
   },
+  update: async (req, res, _next) => {
+    const { productSalesArray, id: sale } = req;
+    await salesService.checkProduct(productSalesArray);
+    await salesService.byId(sale);
+    const updatedItems = await salesService.update(sale, productSalesArray);
+
+    res.status(200).json(updatedItems);
+  },
 };
 
 module.exports = salesController;
