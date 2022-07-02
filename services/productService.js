@@ -5,15 +5,13 @@ const productService = {
   emptyData: (data) => data.length < 1,
   all: async () => {
     const data = await productModel.all();
-    if (productService.emptyData(data))
-      throw new NotFoundError('Product not found');
+    if (productService.emptyData(data)) throw new NotFoundError('Product not found');
 
     return data;
   },
   byId: async (id) => {
     const data = await productModel.byId(id);
-    if (productService.emptyData(data))
-      throw new NotFoundError('Product not found');
+    if (productService.emptyData(data)) throw new NotFoundError('Product not found');
 
     const [result] = data;
     return result;
