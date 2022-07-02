@@ -12,14 +12,14 @@ function checkJoiCases(err, res) {
         message: err.message,
       });
     default:
-      return res.status(500).json({ message: err.message });
+      return false;
   }
 }
 
 function errorHandler(err, _req, res, _next) {
-  if (err.message === 'NotFoundError') {
+  if (err.name === 'NotFoundError') {
     res.status(404).json({
-      message: 'Product not found',
+      message: err.message,
     });
     return;
   }
