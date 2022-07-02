@@ -29,6 +29,22 @@ const productController = {
 
     res.status(201).json(created);
   },
+  update: async (req, res, _next) => {
+    const schemaBody = Joi.object({
+      name: Joi.string().min(5).required().messages({
+        'string.min': '"name" length must be at least 5 characters long',
+        'any.required': '"name" is required',
+      }),
+    }).required();
+    const schemaParams = Joi.object({
+      id: Joi.number().positive().integer().required(),
+    }).required();
+    const { name: product } = await schemaBody.validateAsync({ ...req.body });
+    const { id } = await schemaParams.validateAsync({ ...req.params });
+    const updated = await productService.update(id, product);
+
+    res.status(200).json(updated);
+  },
 };
 
 module.exports = productController;
