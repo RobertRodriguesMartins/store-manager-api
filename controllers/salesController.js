@@ -2,6 +2,11 @@ const Joi = require('joi');
 const salesService = require('../services/salesService');
 
 const salesController = {
+  all: async (_req, res, _next) => {
+    const data = await salesService.all();
+
+    res.status(200).json(data);
+  },
   create: async (req, res, _next) => {
     const expected = Joi.object({
       productId: Joi.number().positive().required().messages({
