@@ -29,6 +29,15 @@ const productController = {
 
     res.status(201).json(created);
   },
+  delete: async (req, res, _next) => {
+    const schema = Joi.object({
+      id: Joi.number().positive().integer().required(),
+    }).required();
+    const { id: product } = await schema.validateAsync({ ...req.params });
+    await productService.delete(product);
+
+    res.status(204).end();
+  },
   update: async (req, res, _next) => {
     const schemaBody = Joi.object({
       name: Joi.string().min(5).required().messages({
