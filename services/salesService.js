@@ -42,6 +42,18 @@ const salesService = {
       itemsSold: productsSales,
     };
   },
+  update: async (saleId, productsSales) => {
+    const updateSales = [];
+    productsSales.forEach((product) => {
+      const { productId, quantity } = product;
+      updateSales.push(salesModel.update(saleId, productId, quantity));
+    });
+    await Promise.all(updateSales);
+    return {
+      saleId,
+      itemsUpdated: productsSales,
+    };
+  },
   erase: async (sale) => {
     await salesModel.erase(sale);
   },
