@@ -5,13 +5,15 @@ const productService = {
   emptyData: (data) => data.length < 1,
   all: async () => {
     const data = await productModel.all();
-    if (productService.emptyData(data)) throw new NotFoundError('Product not found');
+    if (productService.emptyData(data))
+      throw new NotFoundError('Product not found');
 
     return data;
   },
   byId: async (id) => {
     const data = await productModel.byId(id);
-    if (productService.emptyData(data)) throw new NotFoundError('Product not found');
+    if (productService.emptyData(data))
+      throw new NotFoundError('Product not found');
 
     const [result] = data;
     return result;
@@ -28,6 +30,15 @@ const productService = {
   erase: async (product) => {
     await productService.byId(product);
     await productModel.erase(product);
+  },
+  search: async (product) => {
+    const data = await productModel.search(product);
+    if (productService.emptyData(data)) {
+      const response = await productService.all();
+      return response;
+    }
+
+    return data;
   },
   update: async (id, product) => {
     await productService.byId(id);
