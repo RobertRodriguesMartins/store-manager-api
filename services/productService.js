@@ -25,6 +25,10 @@ const productService = {
       name: product,
     };
   },
+  delete: async (product) => {
+    await productService.byId(product);
+    await productModel.delete(product);
+  },
   update: async (id, product) => {
     await productService.byId(id);
     await productModel.update(id, product);
