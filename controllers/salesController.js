@@ -40,6 +40,19 @@ const salesController = {
     );
     res.status(201).json(response);
   },
+  erase: async (req, res, _next) => {
+    const schema = Joi.object({
+      id: Joi.number().positive().required().messages({
+        'joi.number': 'must be a number',
+      }),
+    });
+    const { id: sale } = await schema.validateAsync({ ...req.params });
+
+    await salesService.byId(sale);
+    await salesService.erase(sale);
+
+    res.status(204).end();
+  },
 };
 
 module.exports = salesController;
