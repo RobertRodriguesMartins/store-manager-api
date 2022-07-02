@@ -7,6 +7,17 @@ const salesController = {
 
     res.status(200).json(data);
   },
+  byId: async (req, res, _next) => {
+    const expected = Joi.object({
+      id: Joi.number().positive().required().messages({
+        'joi.number': 'must be a number',
+      }),
+    });
+    const { id } = await expected.validateAsync({ ...req.params });
+    const data = await salesService.byId(id);
+
+    res.status(200).json(data);
+  },
   create: async (req, res, _next) => {
     const expected = Joi.object({
       productId: Joi.number().positive().required().messages({
