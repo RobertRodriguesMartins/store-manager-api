@@ -11,6 +11,7 @@ describe('/controller/productController', () => {
   const response = {};
   response.status = sinon.stub().returns(response);
   response.json = sinon.stub().returns(response);
+  response.end = sinon.stub().returns();
 
   const request = {
     body: [
@@ -112,6 +113,71 @@ describe('/controller/productController', () => {
           })
         )
         .to.be.equals(true);
+    });
+  });
+  describe('erase', () => {
+    it('should reject when salesService erase rejects', () => {
+      sinon.stub(salesService, 'erase').rejects();
+      sinon.stub(salesService, 'byId').resolves();
+      return chai.expect(salesController.erase(request, response, '')).to
+        .eventually.be.rejected;
+    });
+    it('should reject when salesService byId rejects', () => {
+      sinon.stub(salesService, 'erase').resolves();
+      sinon.stub(salesService, 'byId').rejects();
+      return chai.expect(salesController.erase(request, response, '')).to
+        .eventually.be.rejected;
+    });
+    it('should reject when joi validation fails', () => {
+      sinon.stub(salesService, 'erase').resolves();
+      sinon.stub(salesService, 'byId').resolves();
+      return chai.expect(salesController.erase({ params: 'a' }, response, ''))
+        .to.eventually.be.rejected;
+    });
+    it('should resolves when salesService erase and byId and joi validations pass', () => {
+      sinon.stub(salesService, 'erase').resolves();
+      sinon.stub(salesService, 'byId').resolves();
+      return chai.expect(salesController.erase(request, response, '')).to
+        .eventually.not.be.rejected;
+    });
+    it('should respond with 204 and end', async () => {
+      sinon.stub(salesService, 'erase').resolves(1);
+      sinon.stub(salesService, 'byId').resolves(1);
+      await salesController.erase(request, response, '');
+
+      chai.expect(response.status.calledWith(204)).to.be.true;
+      chai.expect(response.end.called).to.be.true;
+    });
+  });
+  describe('update', () => {
+    it('should reject when salesService checkProduct rejects', () => {
+      sinon.stub(salesService, 'checkProduct').rejects();
+      sinon.stub(salesService, 'byId').resolves();
+      sinon.stub(salesService, 'update').resolves();
+      return chai.expect(salesController.update(request, response, '')).to
+        .eventually.be.rejected;
+    });
+    it('should reject when salesService byId rejects', () => {
+      sinon.stub(salesService, 'checkProduct').resolves();
+      sinon.stub(salesService, 'byId').rejects();
+      sinon.stub(salesService, 'update').resolves();
+      return chai.expect(salesController.update(request, response, '')).to
+        .eventually.be.rejected;
+    });
+    it('should reject when salesService update rejects', () => {
+      sinon.stub(salesService, 'checkProduct').resolves();
+      sinon.stub(salesService, 'byId').resolves();
+      sinon.stub(salesService, 'update').rejects();
+      return chai.expect(salesController.update(request, response, '')).to
+        .eventually.be.rejected;
+    });
+    it('should respond with status 200 and json', async () => {
+      sinon.stub(salesService, 'checkProduct').resolves();
+      sinon.stub(salesService, 'byId').resolves();
+      sinon.stub(salesService, 'update').resolves({ teste: 1 });
+      await salesController.update(request, response, '');
+      chai.expect(response.status.calledWith(200)).to.be.true;
+      chai.expect(response.json.calledWith({ teste: 1 })).to.be.true;
     });
   });
 });
